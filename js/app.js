@@ -29,7 +29,7 @@ let matchCards = 0;
 let scorePanelStars = document.querySelectorAll('ul.stars li');
 let scorePanelMoves = document.querySelector('span.moves');
 const STARS_LENGTH = scorePanelStars.length;
-const PENALTY_VAL = 8;
+const PENALTY_VAL = 16;
 
 let scorePanel = {
   moves: 0,
@@ -124,7 +124,7 @@ function matching(target) {
 }
 
 function displayStarPenalty() {
-  if (scorePanel.stars !== 0){
+  if (scorePanel.stars !== 0) {
     if (scorePanel.moves === scorePanel.penalty) {
       scorePanel.stars--;
       scorePanelStars[scorePanel.stars].firstElementChild.classList.add('fa-star-o');
@@ -144,8 +144,10 @@ function displayCard(target) {
 function displayWinner() {
   if (matchCards === cards.length) {
     console.log('CONGRATULATION! YOU WON!');
+    console.log(`With ${scorePanel.moves} Moves and ${scorePanel.stars} Star(s)`);
   }
 }
+
 function resetGame() {
   list = [];
   scorePanel.reset();
