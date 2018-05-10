@@ -9,17 +9,23 @@
 /**
  * GAME SETTINGS
  */
-
+// Controls
 const GAME_BOARD = document.getElementById('gameBoard');
 const RESTART = document.getElementById('restart');
+const PLAY_AGAIN = document.getElementById('playAgain');
 const TIMEOUT = 500;
 
+// Cards
 const CARD_CLASSES = ['open', 'show'];
 const [OPEN_CARD, SHOW_CARD] = CARD_CLASSES;
-
 let cards = [...document.querySelectorAll('li.card')];
 let list = [];
 let matchCards = 0;
+
+// Modal
+let modal = document.querySelector('div.modal');
+let movesScore = document.getElementById('movesScore');
+let starsScore = document.getElementById('starsScore');
 
 
 /**
@@ -143,9 +149,17 @@ function displayCard(target) {
 
 function displayWinner() {
   if (matchCards === cards.length) {
-    console.log('CONGRATULATION! YOU WON!');
-    console.log(`With ${scorePanel.moves} Moves and ${scorePanel.stars} Star(s)`);
+    modal.classList.remove('modal--hidden');
+    movesScore.textContent = scorePanel.moves;
+    starsScore.textContent = scorePanel.stars;
   }
+}
+
+function playAgain() {
+  modal.classList.add('modal--hidden');
+  movesScore.textContent = 0;
+  starsScore.textContent = 0;
+  resetGame();
 }
 
 function resetGame() {
@@ -159,3 +173,4 @@ function resetGame() {
  */
 GAME_BOARD.addEventListener('click', playGame);
 RESTART.addEventListener('click', resetGame);
+PLAY_AGAIN.addEventListener('click', playAgain);
