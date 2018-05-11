@@ -16,8 +16,8 @@ const PLAY_AGAIN = document.getElementById('playAgain');
 const TIMEOUT = 500;
 
 // Cards
-const CARD_CLASSES = ['open', 'show'];
-const [OPEN_CARD, SHOW_CARD] = CARD_CLASSES;
+const CARD_CLASSES = ['open', 'show', 'match'];
+const [OPEN_CARD, SHOW_CARD, MATCH_CARD] = CARD_CLASSES;
 let cards = [...document.querySelectorAll('li.card')];
 let list = [];
 let matchCards = 0;
@@ -94,25 +94,26 @@ function playGame(event) {
   let target = event.target;
   if (target.nodeName === 'LI') {
     displayCard(target);
-    matching(target);
+    matchingCards(target);
   }
 }
 
 function hideCard() {
   for (let i = 0; i < list.length; i++) {
-    list[i].classList.remove(...CARD_CLASSES);
+    list[i].classList.remove(OPEN_CARD, SHOW_CARD);
   }
 }
 
 function openCard() {
   for (let i = 0; i < list.length; i++) {
-    list[i].classList.add(OPEN_CARD);
+    list[i].classList.add(MATCH_CARD);
+    list[i].classList.remove(OPEN_CARD, SHOW_CARD);
   }
   matchCards += 2;
   displayWinner();
 }
 
-function matching(target) {
+function matchingCards(target) {
   list.push(target);
   if (list.length === 2) {
     setTimeout(function () {
@@ -144,7 +145,7 @@ function displayMoves() {
 }
 
 function displayCard(target) {
-  target.classList.add(...CARD_CLASSES);
+  target.classList.add(OPEN_CARD, SHOW_CARD);
 }
 
 function displayWinner() {
