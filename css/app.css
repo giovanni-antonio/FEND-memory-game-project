@@ -97,6 +97,7 @@ p {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
+    pointer-events: none;
 }
 
 /*
