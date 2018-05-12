@@ -208,6 +208,7 @@ p {
     height: 48px;
     width: 125PX;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 /* Thanks to animate.css for the animations
