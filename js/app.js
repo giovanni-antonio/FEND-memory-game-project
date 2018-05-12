@@ -16,11 +16,10 @@ const PLAY_AGAIN = document.getElementById('playAgain');
 const TIMEOUT = 500;
 
 // Cards
-const CARD_CLASSES = ['open', 'show', 'match'];
-const [OPEN_CARD, SHOW_CARD, MATCH_CARD] = CARD_CLASSES;
+const CARD_CLASSES = ['open', 'show', 'match', 'animated', 'shake', 'rubberBand'];
+const [OPEN_CARD, SHOW_CARD, MATCH_CARD, ANIMATED_CARD, ANIMATED_CARD_SHAKE, ANIMATED_CARD_RUBBER] = CARD_CLASSES;
 let cards = [...document.querySelectorAll('li.card')];
 let list = [];
-let matchCards = 0;
 
 // Modal
 let modal = document.querySelector('div.modal');
@@ -41,10 +40,12 @@ let scorePanel = {
   moves: 0,
   stars: STARS_LENGTH,
   penalty: PENALTY_VAL,
+  openCardsCount: 0,
   reset() {
     this.moves = 0;
     this.stars = STARS_LENGTH;
     this.penalty = PENALTY_VAL;
+    this.openCardsCount = 0;
     scorePanelMoves.textContent = 0;
     for (let i = 0; i < STARS_LENGTH; i++) {
       scorePanelStars[i].firstElementChild.classList.remove('fa-star-o');
@@ -95,22 +96,31 @@ function playGame(event) {
   if (target.nodeName === 'LI') {
     displayCard(target);
     matchingCards(target);
+    displayMoves();
+    displayStarPenalty();
   }
 }
 
 function hideCard() {
   for (let i = 0; i < list.length; i++) {
-    list[i].classList.remove(OPEN_CARD, SHOW_CARD);
+    animateCard(list[i], ANIMATED_CARD_SHAKE);
   }
 }
 
 function openCard() {
+  scorePanel.openCardsCount += 2;
   for (let i = 0; i < list.length; i++) {
     list[i].classList.add(MATCH_CARD);
-    list[i].classList.remove(OPEN_CARD, SHOW_CARD);
+    animateCard(list[i], ANIMATED_CARD_RUBBER);
   }
-  matchCards += 2;
   displayWinner();
+}
+
+function animateCard(el, animation) {
+  el.classList.add(animation, ANIMATED_CARD);
+  setTimeout(() => {
+    el.classList.remove(animation, ANIMATED_CARD, OPEN_CARD, SHOW_CARD);
+  }, 500);
 }
 
 function matchingCards(target) {
@@ -125,8 +135,6 @@ function matchingCards(target) {
       list = [];
     }, TIMEOUT);
     scorePanel.moves++;
-    displayMoves();
-    displayStarPenalty();
   }
 }
 
@@ -149,7 +157,7 @@ function displayCard(target) {
 }
 
 function displayWinner() {
-  if (matchCards === cards.length) {
+  if (scorePanel.openCardsCount === cards.length) {
     modal.classList.remove('modal--hidden');
     movesScore.textContent = scorePanel.moves;
     starsScore.textContent = scorePanel.stars;
