@@ -11,8 +11,8 @@ all cards have successfully been matched.
 - [Animate.css](https://daneden.github.io/animate.css/)
 
 ## TODOs
-- Add CSS animations when cards are clicked, unsuccessfully matched, and
-successfully matched.
+- ~~Add CSS animations when cards are clicked, unsuccessfully matched, and
+successfully matched.~~
 - Add unique functionality beyond the minimum requirements (Implement a
 leaderboard, store game state using local storage, etc.)
 - Implement additional optimizations that improve the performance and user
