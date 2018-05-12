@@ -26,6 +26,7 @@ let list = [];
 let modal = document.querySelector('div.modal');
 let movesScore = document.getElementById('movesScore');
 let starsScore = document.getElementById('starsScore');
+let recordTime = document.getElementById('recordTime');
 
 // Time
 const TIME = document.querySelector('span.time');
@@ -214,6 +215,7 @@ function displayWinner() {
     modal.classList.remove('modal--hidden');
     movesScore.textContent = scorePanel.moves;
     starsScore.textContent = scorePanel.stars;
+    recordTime.textContent = `${timeControl.minutes}:${timeControl.seconds}s`;
     stopTimer();
   }
 }
