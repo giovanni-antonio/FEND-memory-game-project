@@ -14,6 +14,7 @@ const GAME_BOARD = document.getElementById('gameBoard');
 const RESTART = document.getElementById('restart');
 const PLAY_AGAIN = document.getElementById('playAgain');
 const TIMEOUT = 500;
+let timeID;
 
 // Cards
 const CARD_CLASSES = ['open', 'show', 'match', 'animated', 'shake', 'rubberBand'];
@@ -26,6 +27,8 @@ let modal = document.querySelector('div.modal');
 let movesScore = document.getElementById('movesScore');
 let starsScore = document.getElementById('starsScore');
 
+// Time
+const TIME = document.querySelector('span.time');
 
 /**
  * SCORE PANEL
@@ -50,6 +53,23 @@ let scorePanel = {
     for (let i = 0; i < STARS_LENGTH; i++) {
       scorePanelStars[i].firstElementChild.classList.remove('fa-star-o');
     }
+  }
+};
+
+/**
+ * TIMER
+ */
+let timeControl = {
+  uptime: false,
+  seconds: 1,
+  minutes: 0,
+  hours: 0,
+  delay: 1000,
+  reset() {
+    this.seconds = 1;
+    this.minutes = 0;
+    this.hours = 0;
+    this.uptime = false;
   }
 };
 
@@ -87,6 +107,38 @@ function shuffle(array) {
 
 displayBoard();
 
+function displayTimer() {
+  TIME.textContent = `${timeControl.minutes}:${timeControl.seconds}s`;
+  if (timeControl.seconds++ === 59) {
+    timeControl.seconds = 0;
+    timeControl.minutes++;
+    if (timeControl.minutes === 59) {
+      timeControl.minutes = 0;
+      timeControl.hours++;
+      if (timeControl.hours === 24) {
+        timeControl.hours = 0;
+      }
+    }
+  }
+  timeID = setTimeout(() => {
+    displayTimer();
+  }, timeControl.delay);
+}
+
+function startTimer(event) {
+  event.preventDefault();
+  if (!timeControl.uptime) {
+    timeControl.uptime = true;
+    displayTimer();
+  }
+}
+
+function stopTimer() {
+  clearTimeout(timeID);
+  timeControl.reset();
+  TIME.textContent = '0:0s';
+}
+
 /**
  * GAME FUNCTIONALITY
  */
@@ -113,6 +165,7 @@ function openCard() {
     list[i].classList.add(MATCH_CARD);
     animateCard(list[i], ANIMATED_CARD_RUBBER);
   }
+  // when all cards are open display winner
   displayWinner();
 }
 
@@ -161,6 +214,7 @@ function displayWinner() {
     modal.classList.remove('modal--hidden');
     movesScore.textContent = scorePanel.moves;
     starsScore.textContent = scorePanel.stars;
+    stopTimer();
   }
 }
 
@@ -172,6 +226,7 @@ function playAgain() {
 }
 
 function resetGame() {
+  stopTimer();
   list = [];
   scorePanel.reset();
   displayBoard();
@@ -180,6 +235,9 @@ function resetGame() {
 /**
  * GAME CONTROLS
  */
+
+GAME_BOARD.addEventListener('click', startTimer);
+
 GAME_BOARD.addEventListener('click', playGame);
 RESTART.addEventListener('click', resetGame);
 PLAY_AGAIN.addEventListener('click', playAgain);
