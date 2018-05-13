@@ -38,6 +38,9 @@ body {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
+    max-width: 736px;
+    width: 90%;
+    margin: auto;
 }
 
 h1 {
@@ -72,10 +75,10 @@ p {
  */
 
 .deck {
-    width: 660px;
-    min-height: 680px;
+    max-width: 290px;
+    min-height: 310px;
     background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
-    padding: 32px;
+    padding: 36px;
     border-radius: 10px;
     -webkit-box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
             box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
@@ -94,8 +97,6 @@ p {
 }
 
 .deck .card {
-    height: 125px;
-    width: 125px;
     background: #2e3d49;
     font-size: 0;
     color: #ffffff;
@@ -143,8 +144,10 @@ p {
 
 .score-panel {
     text-align: left;
-    width: 345px;
+    width: 375px;
+    height: 48px;
     margin-bottom: 10px;
+    line-height: 48px;
 }
 
 .score-panel .stars {
@@ -166,7 +169,7 @@ p {
 
 .score-panel .clock {
     float: left;
-    width: 125px;
+    width: 96px;
 }
 
 /* Modal */
@@ -210,7 +213,45 @@ p {
     border-radius: 5px;
     cursor: pointer;
 }
+/* RWD */
+@media screen and (max-width: 425px){
+    .deck {
+        max-width: 290px;
+        min-height: 310px;
+        padding: 16px;
+    }
+    .deck .card {
+        height: 60px;
+        width: 60px;
+    }
 
+    .score-panel{
+        width: 320px;
+    }
+}
+
+@media screen and (min-width: 736px){
+    .deck {
+        max-width: 460px;
+        min-height: 480px;
+    }
+
+    .deck .card {
+        height: 80px;
+        width: 80px;
+    }
+}
+@media screen and (min-width: 1440px){
+    .deck {
+        max-width: 660px;
+        min-height: 680px;
+    }
+
+    .deck .card {
+        height: 125px;
+        width: 125px;
+    }
+}
 /* Thanks to animate.css for the animations
 https://daneden.github.io/animate.css/
 */
