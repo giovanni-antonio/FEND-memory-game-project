@@ -64,12 +64,12 @@
 
   let timeControl = {
     uptime: false,
-    seconds: 1,
+    seconds: 0,
     minutes: 0,
     hours: 0,
     delay: 1000,
     reset() {
-      this.seconds = 1;
+      this.seconds = 0;
       this.minutes = 0;
       this.hours = 0;
       this.uptime = false;
@@ -147,13 +147,13 @@
   }
 
   function displayTimer() {
-    TIME.textContent = `${timeControl.minutes}:${timeControl.seconds}`;
+    let minutes = `0${timeControl.minutes}`.slice(-2);
+    let seconds = `0${timeControl.seconds}`.slice(-2);
+    TIME.textContent = `${minutes}:${seconds}`;
   }
 
   function stopTimer() {
     clearTimeout(timeID);
-    timeControl.reset();
-    TIME.textContent = '0:0';
     timeID = null;
   }
 
@@ -186,7 +186,10 @@
       animateCard(list[i], ANIMATED_CARD_RUBBER);
     }
     // when all cards are open display winner screen
-    displayWinner();
+    if (scorePanel.openCardsCount === cards.length) {
+      stopTimer();
+      displayWinner();
+    }
   }
 
   // Create animation
@@ -231,13 +234,13 @@
   }
 
   function displayWinner() {
-    if (scorePanel.openCardsCount === cards.length) {
-      modal.classList.remove('modal--hidden');
-      movesScore.textContent = scorePanel.moves;
-      starsScore.textContent = scorePanel.stars;
-      recordTime.textContent = `${timeControl.minutes}:${timeControl.seconds}`;
-      stopTimer();
-    }
+    let minutes = `0${timeControl.minutes}`.slice(-2);
+    // timeControl.seconds -1 animation timeout delay
+    let seconds = `0${timeControl.seconds - 1}`.slice(-2);
+    modal.classList.remove('modal--hidden');
+    movesScore.textContent = scorePanel.moves;
+    starsScore.textContent = scorePanel.stars;
+    recordTime.textContent = `${minutes}:${seconds}`;
   }
 
   function playAgain(event) {
@@ -248,9 +251,11 @@
   }
 
   function resetGame(event) {
-    stopTimer();
-    scorePanel.reset();
     list = [];
+    stopTimer();
+    TIME.textContent = '00:00';
+    timeControl.reset();
+    scorePanel.reset();
     displayBoard();
   }
 
