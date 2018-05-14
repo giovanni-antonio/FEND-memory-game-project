@@ -109,7 +109,7 @@ function shuffle(array) {
 displayBoard();
 
 function displayTimer() {
-  TIME.textContent = `${timeControl.minutes}:${timeControl.seconds}s`;
+  TIME.textContent = `${timeControl.minutes}:${timeControl.seconds}`;
   if (timeControl.seconds++ === 59) {
     timeControl.seconds = 0;
     timeControl.minutes++;
@@ -137,7 +137,7 @@ function startTimer(event) {
 function stopTimer() {
   clearTimeout(timeID);
   timeControl.reset();
-  TIME.textContent = '0:0s';
+  TIME.textContent = '0:0';
 }
 
 /**
@@ -215,7 +215,7 @@ function displayWinner() {
     modal.classList.remove('modal--hidden');
     movesScore.textContent = scorePanel.moves;
     starsScore.textContent = scorePanel.stars;
-    recordTime.textContent = `${timeControl.minutes}:${timeControl.seconds}s`;
+    recordTime.textContent = `${timeControl.minutes}:${timeControl.seconds}`;
     stopTimer();
   }
 }
@@ -237,9 +237,9 @@ function resetGame() {
 /**
  * GAME CONTROLS
  */
-
+// Only fires once to start timer
 GAME_BOARD.addEventListener('click', startTimer);
-
+// Game board elements clicked
 GAME_BOARD.addEventListener('click', playGame);
 RESTART.addEventListener('click', resetGame);
 PLAY_AGAIN.addEventListener('click', playAgain);
