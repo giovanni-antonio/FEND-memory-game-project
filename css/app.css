@@ -185,8 +185,8 @@ p {
     width: 100%;
     visibility: visible;
     opacity: 1;
-    -webkit-transition: all 0.5s ease 0.75s;
-    transition: all 0.5s ease 0.75s;
+    -webkit-transition: all 0.5s ease 0.5s;
+    transition: all 0.5s ease 0.5s;
 }
 
 .modal--hidden {
@@ -236,7 +236,7 @@ p {
     }
 
     .score-panel .clock {
-        width: 60px;
+        width: 76px;
     }
 }
 
@@ -244,10 +244,6 @@ p {
     .deck .card {
         height: 55px;
         width: 55px;
-    }
-
-    .score-panel{
-        width: 270px;
     }
 }
 
