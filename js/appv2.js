@@ -56,6 +56,17 @@
     return array;
   }
 
+  /**
+   * Generate Game Board on page load
+   */
+
+  createGameBoard();
+
+  /**
+   *
+   * Game Functionality
+   */
+
   function startGame(evt) {
     // Set the target element global dependency
     const target = evt.target;
@@ -82,10 +93,11 @@
         scorePanel.countMoves++;
         // Wait to find a match
         setTimeout(function () {
-          if (tempList[0].firstElementChild.className === tempList[1].firstElementChild.className)
+          if (tempList[0].firstElementChild.className === tempList[1].firstElementChild.className) {
             matchCards();
-          else
+          } else {
             closeCards();
+          }
           // Clear temporary list start fresh
           tempList = [];
         }, 500);
