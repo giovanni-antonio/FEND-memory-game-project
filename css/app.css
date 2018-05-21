@@ -177,7 +177,7 @@ p {
 /* Modal */
 
 .modal {
-    background-color: rgba(255, 255, 255, .75);
+    background-color: rgba(253, 253, 253, 1);
     position: absolute;
     left: 0;
     top: 0;
@@ -203,8 +203,8 @@ p {
     background-color: #fff;
     height: 340px;
     padding: 1em;
-    -webkit-box-shadow: 0 15px 20px 0 rgba(46, 61, 73, 0.1);
-            box-shadow: 0 15px 20px 0 rgba(46, 61, 73, 0.1);
+    -webkit-box-shadow: 0 15px 70px 0 rgba(46, 61, 73, 0.1);
+            box-shadow: 0 15px 70px 0 rgba(46, 61, 73, 0.1);
     border-radius: 10px;
 }
 

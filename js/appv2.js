@@ -23,7 +23,7 @@
   /**
    * No need to reload page when restarting game you only need to
    * update the given DOM using createGameBoard() if reload is use you actually reloading the
-   * whole page which is unessesary
+   * whole page which is unnecessary
    */
   function createGameBoard() {
     // Make sure temporary list is empty
@@ -72,10 +72,21 @@
     const target = evt.target;
     // Adds an event to any card in the deck/game board
     if (target.nodeName === 'LI') {
-      // Call game funtionality
+      // Open/Show card
       openCard();
-      matchOpenCards();
-      scorePanel.displayScores();
+      // Add current open card to a temporary list
+      tempList.push(target);
+      // Check if more than one card in temporary list
+      if (tempList.length === 2) {
+        // Count moves
+        scorePanel.countMoves++;
+        // Matching processing
+        matchOpenCards();
+        // Display score
+        scorePanel.displayScores();
+      } else {
+        return false;
+      }
       // For perf reasons remove events from the elements
       target.removeEventListener('click', startGame, false);
     }
@@ -85,69 +96,59 @@
     }
 
     function matchOpenCards() {
-      // Add current open cards to a temporary list
-      tempList.push(target);
-      // Check if more than one card is open
-      if (tempList.length === 2) {
-        // Count moves
-        scorePanel.countMoves++;
-        // Wait to find a match
-        setTimeout(function () {
-          if (tempList[0].firstElementChild.className === tempList[1].firstElementChild.className) {
-            matchCards();
-          } else {
-            closeCards();
-          }
-          // Clear temporary list start fresh
-          tempList = [];
-        }, 500);
-      } else {
-        return false;
+      // Wait to find a match
+      setTimeout(function () {
+        if (tempList[0].firstElementChild.className === tempList[1].firstElementChild.className) {
+          matchCards();
+        } else {
+          closeCards();
+        }
+        // Clear temporary list start fresh
+        tempList = [];
+      }, 500);
+    }
+
+    function matchCards() {
+      // Count matches
+      scorePanel.countMatches += 2;
+      // Animate match cards
+      animateCard(tempList[0], ANIMATED_CARD_RUBBER);
+      animateCard(tempList[1], ANIMATED_CARD_RUBBER);
+      // Add match class to open cards
+      tempList[0].classList.add(MATCH_CARD);
+      tempList[1].classList.add(MATCH_CARD);
+      // Check match cards counter, counter needs to equal total number of cards, then , stop timer and display winner screen
+      if (scorePanel.countMatches === cards.length) {
+        stopTimer();
+        displayWinner();
       }
     }
-  }
 
-  function matchCards() {
-    // Count matches
-    scorePanel.countMatches += 2;
-    // Animate match cards
-    animateCard(tempList[0], ANIMATED_CARD_RUBBER);
-    animateCard(tempList[1], ANIMATED_CARD_RUBBER);
-    // Add match class to open cards
-    tempList[0].classList.add(MATCH_CARD);
-    tempList[1].classList.add(MATCH_CARD);
-    // Check match cards counter, counter needs to equal total numer of cards, then , stop timer and display winner screen
-    if (scorePanel.countMatches === cards.length) {
-      stopTimer();
-      displayWinner();
+    function closeCards() {
+      // Animate wrong match
+      animateCard(tempList[0], ANIMATED_CARD_SHAKE);
+      animateCard(tempList[1], ANIMATED_CARD_SHAKE);
+    }
+
+    function animateCard(el, animation) {
+      // First animate card element
+      el.classList.add(animation, ANIMATED_CARD);
+      // Then remove animation and added classes
+      setTimeout(() => {
+        el.classList.remove(animation, ANIMATED_CARD, OPEN_CARD, SHOW_CARD);
+      }, 500);
+    }
+
+    function displayWinner() {
+      let mm = `0${time.min}`.slice(-2);
+      let ss = `0${time.sec - 1}`.slice(-2);
+      MODAL.classList.remove('modal--hidden');
+      MODAL.classList.add('animated', 'zoomIn');
+      document.getElementById('movesScore').textContent = scorePanel.countMoves;
+      document.getElementById('recordTime').textContent = `${mm}:${ss}`;
+      document.getElementById('starsScore').textContent = scorePanel.stars;
     }
   }
-
-  function closeCards() {
-    // Animate wrong match
-    animateCard(tempList[0], ANIMATED_CARD_SHAKE);
-    animateCard(tempList[1], ANIMATED_CARD_SHAKE);
-  }
-
-  function animateCard(el, animation) {
-    // First animate card element
-    el.classList.add(animation, ANIMATED_CARD);
-    // Then remove animation and added classes
-    setTimeout(() => {
-      el.classList.remove(animation, ANIMATED_CARD, OPEN_CARD, SHOW_CARD);
-    }, 500);
-  }
-
-  function displayWinner() {
-    let mm = `0${time.min}`.slice(-2);
-    let ss = `0${time.sec - 1}`.slice(-2);
-    MODAL.classList.remove('modal--hidden');
-    MODAL.classList.add('animated', 'zoomIn');
-    document.getElementById('movesScore').textContent = scorePanel.countMoves;
-    document.getElementById('recordTime').textContent = `${mm}:${ss}`;
-    document.getElementById('starsScore').textContent = scorePanel.stars;
-  }
-
   /**
    * Config score panel
    */
