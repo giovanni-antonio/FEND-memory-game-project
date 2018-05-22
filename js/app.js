@@ -1,94 +1,42 @@
 /**
- * MEMORY GAME PROJECT
+ * Memory Game App
  * Author: Giovanni Lara
- * Date: May 8, 2018
+ * Date: 05/18/2018
  * https://github.com/gioalo
- * v1.0
- */
-/**
- * GAME SETTINGS
+ * Lic. M.I.T
+ * v2.0
  */
 (function () {
+
   'use strict';
-  // Controls
+  // Globals
   const GAME_BOARD = document.getElementById('gameBoard');
   const RESTART = document.getElementById('restart');
   const PLAY_AGAIN = document.getElementById('playAgain');
-  const TIMEOUT = 500;
-  let timeID = null;
-
-  // Cards
-  const CARD_CLASSES = ['open', 'show', 'match', 'animated', 'shake', 'rubberBand'];
-  const [OPEN_CARD, SHOW_CARD, MATCH_CARD, ANIMATED_CARD, ANIMATED_CARD_SHAKE, ANIMATED_CARD_RUBBER] = CARD_CLASSES;
+  const CARD_CLASSES = ['open', 'show', 'match', 'animated', 'shake', 'rubberBand', 'flipInY'];
+  const [OPEN_CARD, SHOW_CARD, MATCH_CARD, ANIMATED_CARD, ANIMATED_CARD_SHAKE, ANIMATED_CARD_RUBBER, ANIMATED_CARD_FLIPY] = CARD_CLASSES;
+  const MODAL = document.querySelector('.modal');
   let cards = [...document.querySelectorAll('li.card')];
-  let list = [];
+  let tempList = [];
 
-  // Modal
-  let modal = document.querySelector('div.modal');
-  let movesScore = document.getElementById('movesScore');
-  let starsScore = document.getElementById('starsScore');
-  let recordTime = document.getElementById('recordTime');
-
-  // Time
-  const TIME = document.querySelector('span.time');
 
   /**
-   * SCORE CONFIG
+   * No need to reload page when restarting game you only need to
+   * update the given DOM using createGameBoard() if reload is use you actually reloading the
+   * whole page which is unnecessary
    */
-
-  let scorePanelStars = document.querySelectorAll('ul.stars li');
-  let scorePanelMoves = document.querySelector('span.moves');
-  const STARS_LENGTH = scorePanelStars.length;
-  const PENALTY_VAL = 16;
-
-  let scorePanel = {
-    moves: 0,
-    stars: STARS_LENGTH,
-    penalty: PENALTY_VAL,
-    openCardsCount: 0,
-    reset() {
-      this.moves = 0;
-      this.stars = STARS_LENGTH;
-      this.penalty = PENALTY_VAL;
-      this.openCardsCount = 0;
-      scorePanelMoves.textContent = 0;
-      for (let i = 0; i < STARS_LENGTH; i++) {
-        scorePanelStars[i].firstElementChild.classList.remove('fa-star-o');
-      }
-    }
-  };
-
-  /**
-   * TIMER CONFIG
-   */
-
-  let timeControl = {
-    uptime: false,
-    seconds: 0,
-    minutes: 0,
-    hours: 0,
-    delay: 1000,
-    reset() {
-      this.seconds = 0;
-      this.minutes = 0;
-      this.hours = 0;
-      this.uptime = false;
-    }
-  };
-
-  /**
-   * DISPLAY CARDS
-   */
-
-  function displayBoard() {
+  function createGameBoard() {
+    // Make sure temporary list is empty
+    tempList = [];
+    // Shuffle cards
     cards = shuffle(cards);
-    let fragment = document.createDocumentFragment();
-    for (let i = 0; i < cards.length; i++) {
-      // Clean-up old game history
-      cards[i].classList.remove(...CARD_CLASSES);
-      // add fresh cards
-      fragment.appendChild(cards[i]);
-    }
+    const fragment = document.createDocumentFragment();
+    cards.forEach(function (card) {
+      // Remove any add classes history from cards
+      card.classList.remove(...CARD_CLASSES);
+      // Append to fragment
+      fragment.appendChild(card);
+    });
     GAME_BOARD.appendChild(fragment);
   }
 
@@ -109,163 +57,220 @@
   }
 
   /**
-   * Create board
+   * Generate Game Board on page load
    */
 
-  displayBoard();
+  createGameBoard();
 
   /**
-   * TIMER FUNCTIONALITY
+   *
+   * Game Functionality
    */
 
-  function gameTimer() {
+  function startGame(evt) {
+    // Set the target element global dependency
+    const target = evt.target;
+    // Adds an event to any card in the deck/game board
+    if (target.nodeName === 'LI') {
+      // Open/Show card
+      openCard();
+      // Add current open card to a temporary list
+      tempList.push(target);
+      // Check if more than one card in temporary list
+      if (tempList.length === 2) {
+        // Count moves
+        scorePanel.countMoves++;
+        // Matching processing
+        matchOpenCards();
+        // Display score
+        scorePanel.displayScores();
+      } else {
+        return false;
+      }
+      // For perf reasons remove events from the elements
+      target.removeEventListener('click', startGame, false);
+    }
+
+    function openCard() {
+      target.classList.add(OPEN_CARD, SHOW_CARD);
+    }
+
+    function matchOpenCards() {
+      // Wait to find a match
+      setTimeout(function () {
+        if (tempList[0].firstElementChild.className === tempList[1].firstElementChild.className) {
+          matchCards();
+        } else {
+          closeCards();
+        }
+        // Clear temporary list start fresh
+        tempList = [];
+      }, 500);
+    }
+
+    function matchCards() {
+      // Count matches
+      scorePanel.countMatches += 2;
+      // Animate match cards
+      animateCard(tempList[0], ANIMATED_CARD_RUBBER);
+      animateCard(tempList[1], ANIMATED_CARD_RUBBER);
+      // Add match class to open cards
+      tempList[0].classList.add(MATCH_CARD);
+      tempList[1].classList.add(MATCH_CARD);
+      // Check match cards counter, counter needs to equal total number of cards, then , stop timer and display winner screen
+      if (scorePanel.countMatches === cards.length) {
+        stopTimer();
+        displayWinner();
+      }
+    }
+
+    function closeCards() {
+      // Animate wrong match
+      animateCard(tempList[0], ANIMATED_CARD_SHAKE);
+      animateCard(tempList[1], ANIMATED_CARD_SHAKE);
+    }
+
+    function animateCard(el, animation) {
+      // First animate card element
+      el.classList.add(animation, ANIMATED_CARD);
+      // Then remove animation and added classes
+      setTimeout(() => {
+        el.classList.remove(animation, ANIMATED_CARD, OPEN_CARD, SHOW_CARD);
+      }, 500);
+    }
+
+    function displayWinner() {
+      let mm = `0${time.min}`.slice(-2);
+      let ss = `0${time.sec - 1}`.slice(-2);
+      MODAL.classList.remove('modal--hidden');
+      MODAL.classList.add('animated', 'zoomIn');
+      document.getElementById('movesScore').textContent = scorePanel.countMoves;
+      document.getElementById('recordTime').textContent = `${mm}:${ss}`;
+      document.getElementById('starsScore').textContent = scorePanel.stars;
+    }
+  }
+  /**
+   * Config score panel
+   */
+  const starsEl = document.querySelectorAll('ul.stars li'),
+    movesEl = document.querySelector('span.moves'),
+    timeEl = document.querySelector('span.time');
+  const PENALTY = 12,
+    STARS_LEN = starsEl.length;
+  const scorePanel = {
+    countMoves: 0,
+    countMatches: 0,
+    penalty: PENALTY,
+    stars: STARS_LEN,
+    displayScores() {
+      // Display moves
+      movesEl.textContent = this.countMoves;
+      // Check if there are stars left
+      if (this.stars !== 0) {
+        // Check if number of moves equals penalty
+        if (this.countMoves === this.penalty) {
+          // Remove a star
+          this.stars--;
+          // Adds empty star icon
+          starsEl[this.stars].firstElementChild.classList.add('fa-star-o');
+          // Add next cycle penalty
+          this.penalty += PENALTY;
+        }
+      }
+    },
+    reset() {
+      this.countMoves = 0;
+      this.countMatches = 0;
+      this.stars = STARS_LEN;
+      this.penalty = PENALTY;
+      timeEl.textContent = '00:00';
+      movesEl.textContent = 0;
+      starsEl.forEach(function (star) {
+        star.firstElementChild.classList.remove('fa-star-o');
+      });
+    }
+  };
+
+  /**
+   * Time Config
+   */
+
+  const time = {
+    isRunning: false,
+    timeoutID: null,
+    sec: 0,
+    min: 0,
+    hr: 0,
+    reset() {
+      this.isRunning = false;
+      this.timeoutID = null;
+      this.sec = 0;
+      this.min = 0;
+      this.hr = 0;
+    }
+  }
+
+  function tick() {
     displayTimer();
-    // check for secs, mins, and hours
-    if (timeControl.seconds++ === 59) {
-      timeControl.seconds = 0;
-      timeControl.minutes++;
-      if (timeControl.minutes === 59) {
-        timeControl.minutes = 0;
-        timeControl.hours++;
-        if (timeControl.hours === 24) {
-          timeControl.hours = 0;
+    if (time.sec++ === 59) {
+      time.sec = 0;
+      time.min++;
+      if (time.min === 59) {
+        time.min = 0;
+        time.hr++;
+        if (time.hr === 24) {
+          time.hr = 0;
         }
       }
     }
-    timeID = setTimeout(() => {
-      gameTimer();
-    }, timeControl.delay);
+    time.timeoutID = setTimeout(() => {
+      tick();
+    }, 1000);
   }
 
   function startTimer(event) {
     event.preventDefault();
-    if (!timeControl.uptime) {
-      timeControl.uptime = true;
-      gameTimer();
+    if (!time.isRunning) {
+      time.isRunning = true;
+      tick();
       event.target.removeEventListener('click', startTimer, false);
     }
   }
 
-  function displayTimer() {
-    let minutes = `0${timeControl.minutes}`.slice(-2);
-    let seconds = `0${timeControl.seconds}`.slice(-2);
-    TIME.textContent = `${minutes}:${seconds}`;
-  }
-
   function stopTimer() {
-    clearTimeout(timeID);
-    timeID = null;
+    clearTimeout(time.timeoutID);
+    time.timeoutID = null;
   }
 
+  function displayTimer() {
+    let mm = `0${time.min}`.slice(-2);
+    let ss = `0${time.sec}`.slice(-2);
+    timeEl.textContent = `${mm}:${ss}`;
+  }
   /**
-   * GAME FUNCTIONALITY
+   * Reset game
    */
-
-  function playGame(event) {
-    let target = event.target;
-    if (target.nodeName === 'LI') {
-      displayCard(target);
-      matchingCards(target);
-      displayMoves();
-      displayStarPenalty();
-      // Removes event after done
-      target.removeEventListener('click', playGame, false);
-    }
+  function resetGame() {
+    stopTimer();
+    scorePanel.reset();
+    time.reset();
+    createGameBoard();
   }
 
-  function hideCard() {
-    for (let i = 0; i < list.length; i++) {
-      animateCard(list[i], ANIMATED_CARD_SHAKE);
-    }
-  }
-
-  function openCard() {
-    scorePanel.openCardsCount += 2;
-    for (let i = 0; i < list.length; i++) {
-      list[i].classList.add(MATCH_CARD);
-      animateCard(list[i], ANIMATED_CARD_RUBBER);
-    }
-    // when all cards are open display winner screen
-    if (scorePanel.openCardsCount === cards.length) {
-      stopTimer();
-      displayWinner();
-    }
-  }
-
-  // Create animation
-  function animateCard(el, animation) {
-    el.classList.add(animation, ANIMATED_CARD);
-    setTimeout(() => {
-      el.classList.remove(animation, ANIMATED_CARD, OPEN_CARD, SHOW_CARD);
-    }, TIMEOUT);
-  }
-
-  function matchingCards(target) {
-    list.push(target);
-    if (list.length === 2) {
-      setTimeout(function () {
-        if (list[0].firstElementChild.className === list[1].firstElementChild.className) {
-          openCard();
-        } else {
-          hideCard();
-        }
-        list = [];
-      }, TIMEOUT);
-      scorePanel.moves++;
-    }
-  }
-
-  function displayStarPenalty() {
-    if (scorePanel.stars !== 0) {
-      if (scorePanel.moves === scorePanel.penalty) {
-        scorePanel.stars--;
-        scorePanelStars[scorePanel.stars].firstElementChild.classList.add('fa-star-o');
-        scorePanel.penalty += PENALTY_VAL;
-      }
-    }
-  }
-
-  function displayMoves() {
-    scorePanelMoves.textContent = scorePanel.moves;
-  }
-
-  function displayCard(target) {
-    target.classList.add(OPEN_CARD, SHOW_CARD);
-  }
-
-  function displayWinner() {
-    let minutes = `0${timeControl.minutes}`.slice(-2);
-    // timeControl.seconds -1 animation timeout delay
-    let seconds = `0${timeControl.seconds - 1}`.slice(-2);
-    modal.classList.remove('modal--hidden');
-    movesScore.textContent = scorePanel.moves;
-    starsScore.textContent = scorePanel.stars;
-    recordTime.textContent = `${minutes}:${seconds}`;
-  }
-
-  function playAgain(event) {
-    modal.classList.add('modal--hidden');
-    movesScore.textContent = 0;
-    starsScore.textContent = 0;
+  function playAgain() {
+    // Hide modal and remove animation classes
+    MODAL.classList.remove('animated', 'zoomIn');
+    MODAL.classList.add('modal--hidden');
+    // Reset game
     resetGame();
   }
 
-  function resetGame(event) {
-    list = [];
-    stopTimer();
-    TIME.textContent = '00:00';
-    timeControl.reset();
-    scorePanel.reset();
-    displayBoard();
-  }
-
   /**
-   * GAME CONTROLS
+   * Game events
    */
-  // To start game timer
   GAME_BOARD.addEventListener('click', startTimer);
-  // Play game event
-  GAME_BOARD.addEventListener('click', playGame);
+  GAME_BOARD.addEventListener('click', startGame);
   RESTART.addEventListener('click', resetGame);
   PLAY_AGAIN.addEventListener('click', playAgain);
-})();
+
+}());
