@@ -1,13 +1,13 @@
 html {
     -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 *,
 *::before,
 *::after {
     -webkit-box-sizing: inherit;
-            box-sizing: inherit;
+    box-sizing: inherit;
 }
 
 html,
@@ -29,15 +29,15 @@ body {
     display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
     max-width: 736px;
     width: 90%;
     margin: auto;
@@ -62,11 +62,11 @@ p {
     display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
     text-align: center;
 }
 
@@ -81,18 +81,18 @@ p {
     padding: 25px;
     border-radius: 10px;
     -webkit-box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
-            box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
+    box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
+    flex-wrap: wrap;
     -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
     -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
     margin: 0 0 1em;
 }
 
@@ -108,15 +108,15 @@ p {
     display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
     -webkit-box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
-            box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+    box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
     -webkit-transform: rotateY(-180deg);
-            transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
     -webkit-transition: all 0.5s ease;
     transition: transform 0.5s ease;
     backface-visibility: visible;
@@ -124,7 +124,7 @@ p {
 
 .deck .card.open {
     -webkit-transform: rotateY(0);
-            transform: rotateY(0);
+    transform: rotateY(0);
     background: #02b3e4;
     cursor: default;
     pointer-events: none;
@@ -139,6 +139,8 @@ p {
     background: #02ccba;
     font-size: 33px;
     pointer-events: none;
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
 }
 
 .deck .card.shake {
@@ -209,7 +211,7 @@ p {
     height: 340px;
     padding: 1em;
     -webkit-box-shadow: 0 15px 70px 0 rgba(46, 61, 73, 0.1);
-            box-shadow: 0 15px 70px 0 rgba(46, 61, 73, 0.1);
+    box-shadow: 0 15px 70px 0 rgba(46, 61, 73, 0.1);
     border-radius: 10px;
 }
 
@@ -221,13 +223,13 @@ p {
     width: 125PX;
     border-radius: 5px;
     cursor: pointer;
-    -webkit-box-shadow: 0 10px 30px 0px rgba(0,0,0,0.3);
-            box-shadow: 0 10px 30px 0px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 10px 30px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 30px 0px rgba(0, 0, 0, 0.3);
 }
 
 /* RWD */
 
-@media screen and (max-width: 425px){
+@media screen and (max-width: 425px) {
     .deck {
         max-width: 290px;
         min-height: 310px;
@@ -237,30 +239,27 @@ p {
         height: 60px;
         width: 60px;
     }
-
-    .score-panel{
+    .score-panel {
         width: 290px;
     }
-
     .score-panel .clock {
         width: 76px;
     }
 }
 
-@media screen and (max-width: 320px){
+@media screen and (max-width: 320px) {
     .deck .card {
         height: 55px;
         width: 55px;
     }
 }
 
-@media screen and (min-width: 1440px){
+@media screen and (min-width: 1440px) {
     .deck {
         max-width: 660px;
         min-height: 680px;
         padding: 36px;
     }
-
     .deck .card {
         height: 125px;
         width: 125px;
