@@ -10,6 +10,11 @@ html {
     box-sizing: inherit;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+}
+
 html,
 body {
     width: 100%;
@@ -40,21 +45,8 @@ body {
     flex-direction: column;
     max-width: 736px;
     width: 90%;
+    min-height: 100vh;
     margin: auto;
-}
-
-h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
-}
-
-h2 {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-}
-
-p {
-    font-family: 'Open Sans', sans-serif;
 }
 
 .flex__align-center {
@@ -68,6 +60,16 @@ p {
     -ms-flex-align: center;
     align-items: center;
     text-align: center;
+}
+
+.footer {
+    text-align: center;
+    padding: 100px;
+}
+
+.board-container {
+    position: relative;
+    top: 2em;
 }
 
 /*
@@ -93,7 +95,6 @@ p {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    margin: 0 0 1em;
 }
 
 .deck .card {
@@ -153,39 +154,203 @@ p {
 
 .score-panel {
     text-align: left;
-    width: 375px;
-    height: 48px;
-    margin-bottom: 10px;
+    width: 100%;
+    min-height: 48px;
     line-height: 48px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1em;
+    background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 100;
 }
 
-.score-panel .stars {
-    margin: 0;
-    padding: 0;
+.score-panel h1 {
+    font-size: 1em;
+    font-weight: 300;
+    line-height: inherit;
+    width: 30%;
+}
+
+.stars {
     display: inline-block;
     margin: 0 5px 0 0;
+    width: 10%;
 }
 
-.score-panel .stars li {
+.stars li {
     list-style: none;
     display: inline-block;
 }
 
-.score-panel .restart {
-    float: right;
+.restart {
     cursor: pointer;
+    width: 10%;
 }
 
-.score-panel .clock {
-    float: left;
-    width: 96px;
+.clock {
+    width: 10%;
+}
+
+.counter {
+    width: 10%;
+}
+
+.btn {
+    background: linear-gradient(135deg, #02ccba 0%, #aa7ecd 100%);
+    padding: 1em;
+    font-size: 14px;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #000;
+    z-index: 100;
+    text-align: center;
+    font-family: Coda;
+    line-height: initial;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.25);
+    width: 20%;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
+}
+
+.btn--close {
+    position: absolute;
+    right: 25%;
+    bottom: 2em;
+    width: 50%;
+}
+.btn--score {
+    display: none;
+}
+#leaderboard {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    z-index: -100;
+    transition: 0.4s ease;
+}
+
+#leaderboard:target {
+    visibility: visible;
+    opacity: 1;
+    z-index: 110;
+}
+
+#leaderboard h2 {
+    margin: 180px 0 0;
+    text-align: center;
+    padding: 2em;
+    font-family: Coda;
+}
+
+table {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+table td {
+    width: calc(100% / 4 - 4em);
+}
+
+thead td {
+    text-align: right;
+    font-weight: bold;
+}
+
+tbody td {
+    text-align: right;
+}
+
+#start-screen {
+    position: absolute;
+    z-index: 120;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 10px;
+    text-align: center;
+    padding: 2em;
+    background: rgba(0, 255, 235, 0.87);
+    background: linear-gradient(135deg, hsla(175, 98%, 40%, 0.911) 30%, hsla(273, 44%, 65%, 0.959) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.333em;
+    visibility: visible;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+#start-screen i {
+    margin: 0.5em 0;
+    font-size: 2.5em;
+    color: rgb(82, 255, 255);
+    transition: all;
+}
+
+#start-screen p {
+    font-family: 'Coda';
+}
+
+.hidden#start-screen {
+    visibility: hidden;
+    opacity: 0;
+    z-index: -100;
+}
+
+@media screen and (max-width: 500px) {
+    .score-panel h1 {
+        width: 70%;
+    }
+
+    .clock {
+        width: 30%;
+    }
+
+    .counter,
+    .stars {
+        width: 20%;
+    }
+    .restart {
+        width: 50%;
+    }
+    .btn--score {
+        width: 100%;
+    }
+
+    .board-container {
+        top: 180px;
+    }
 }
 
 /* Modal */
 
 .modal {
     background-color: rgba(253, 253, 253, 1);
-    position: absolute;
+    position: fixed;
+    height: 100vh;
     left: 0;
     top: 0;
     bottom: 0;
@@ -194,37 +359,69 @@ p {
     opacity: 1;
     -webkit-transition: all 0.5s ease 0.5s;
     transition: all 0.5s ease 0.5s;
-    z-index: 1000;
+    z-index: 130;
 }
 
 .modal--hidden {
     visibility: hidden;
     opacity: 0;
-    z-index: -1000;
+    z-index: -100;
 }
 
 .modal .modal__content {
     max-width: 660px;
     width: 100%;
-    margin: auto;
+    margin: auto 1em;
     background-color: #fff;
-    height: 340px;
+    min-height: 340px;
     padding: 1em;
-    -webkit-box-shadow: 0 15px 70px 0 rgba(46, 61, 73, 0.1);
-    box-shadow: 0 15px 70px 0 rgba(46, 61, 73, 0.1);
+    -webkit-box-shadow: 0 10px 60px 0 rgba(46, 61, 73, 0.1);
+    box-shadow: 0 10px 60px 0 rgba(46, 61, 73, 0.1);
     border-radius: 10px;
 }
 
+.modal p {
+    padding: 1em 0;
+}
+
+.modal h3 {
+    font-size: 1.2em;
+    padding: 0.75em 0;
+}
+
 .modal button {
-    background-color: #02ccba;
     border: transparent;
+    margin: 0.75em 0;
     padding: 0 1em 0;
     height: 48px;
     width: 125PX;
-    border-radius: 5px;
     cursor: pointer;
-    -webkit-box-shadow: 0 10px 30px 0px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 10px 30px 0px rgba(0, 0, 0, 0.3);
+}
+
+.form {
+    margin: 2em 0;
+}
+
+.form input {
+    margin: 0.5em 0 1em;
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 100%;
+    padding: 0.5em;
+    border: transparent;
+    border-bottom: thin solid teal;
+}
+
+.form.form--hidden {
+    visibility: hidden;
+    display: none;
+}
+
+#starsScore {
+    display: inline;
+    font-size: 1.777em;
+    text-shadow: 0 1px #000;
 }
 
 /* RWD */
@@ -235,15 +432,10 @@ p {
         min-height: 310px;
         padding: 16px;
     }
+
     .deck .card {
         height: 60px;
         width: 60px;
-    }
-    .score-panel {
-        width: 290px;
-    }
-    .score-panel .clock {
-        width: 76px;
     }
 }
 
@@ -260,6 +452,7 @@ p {
         min-height: 680px;
         padding: 36px;
     }
+
     .deck .card {
         height: 125px;
         width: 125px;

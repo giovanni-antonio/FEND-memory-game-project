@@ -13,12 +13,17 @@
   const GAME_BOARD = document.getElementById('gameBoard');
   const RESTART = document.getElementById('restart');
   const PLAY_AGAIN = document.getElementById('playAgain');
+  const SPLASH_SCREEN = document.getElementById('start-screen');
+  const STARS_CONTAINER = document.getElementById('starsScore');
+  const PLAYER_FORM = document.getElementById('form');
+  const GREET_PLAYER = document.getElementById('greet-player');
   const CARD_CLASSES = ['open', 'show', 'match', 'animated', 'shake', 'rubberBand', 'flipInY'];
   const [OPEN_CARD, SHOW_CARD, MATCH_CARD, ANIMATED_CARD, ANIMATED_CARD_SHAKE, ANIMATED_CARD_RUBBER, ANIMATED_CARD_FLIPY] = CARD_CLASSES;
+  const SCORES_DATA = [];
   const MODAL = document.querySelector('.modal');
   let cards = [...document.querySelectorAll('li.card')];
   let tempList = [];
-
+  let score = 0;
 
   /**
    * No need to reload page when restarting game you only need to
@@ -38,6 +43,9 @@
       fragment.appendChild(card);
     });
     GAME_BOARD.appendChild(fragment);
+
+    // remove winner stars container
+    STARS_CONTAINER.innerHTML = '';
   }
 
   // Shuffle function from http://stackoverflow.com/a/2450976
@@ -146,7 +154,22 @@
       MODAL.classList.add('animated', 'zoomIn');
       document.getElementById('movesScore').textContent = scorePanel.countMoves;
       document.getElementById('recordTime').textContent = `${mm}:${ss}`;
-      document.getElementById('starsScore').textContent = scorePanel.stars;
+      playerScore(scorePanel.stars);
+      let star, startFragment = document.createDocumentFragment();
+      if(scorePanel.stars >= 1) {
+        for (let i = 1; i <= scorePanel.stars; i++) {
+          star = document.createElement('i');
+          star.classList.add('fa','fa-star');
+          star.style.color = '#ff0';
+          startFragment.appendChild(star);
+        }
+        STARS_CONTAINER.appendChild(startFragment);
+      } else {
+        star = document.createElement('i');
+        star.classList.add('fa','fa-frown-o');
+        star.style.color = 'red';
+        STARS_CONTAINER.appendChild(star);
+      }
     }
   }
   /**
@@ -155,7 +178,7 @@
   const starsEl = document.querySelectorAll('ul.stars li'),
     movesEl = document.querySelector('span.moves'),
     timeEl = document.querySelector('span.time');
-  const PENALTY = 12,
+  const PENALTY = 16,
     STARS_LEN = starsEl.length;
   const scorePanel = {
     countMoves: 0,
@@ -247,6 +270,7 @@
     let ss = `0${time.sec}`.slice(-2);
     timeEl.textContent = `${mm}:${ss}`;
   }
+
   /**
    * Reset game
    */
@@ -255,6 +279,7 @@
     scorePanel.reset();
     time.reset();
     createGameBoard();
+    SPLASH_SCREEN.classList.remove('hidden');
   }
 
   function playAgain() {
@@ -263,14 +288,79 @@
     MODAL.classList.add('modal--hidden');
     // Reset game
     resetGame();
+    // optional start with splash screen
+    SPLASH_SCREEN.classList.remove('hidden');
   }
+
+  function splashScreen(event) {
+    event.preventDefault();
+    event.currentTarget.classList.add('hidden');
+    startTimer(event);
+  }
+
+  // Greet player with message
+  function typeMessage(message, color) {
+    GREET_PLAYER.textContent = message;
+    GREET_PLAYER.style.color = color || '#000';
+  }
+
+  function playerScore(stars) {
+    switch (stars) {
+      case 3:
+        typeMessage('Outstanding!');
+        break;
+      case 2:
+        typeMessage('Great Job!');
+        break;
+      case 1:
+        typeMessage('Good Job!');
+        break;
+      default:
+        typeMessage('So Sad! Try Again!','red');
+        break;
+    }
+  }
+
+  // if (storageAvailable('localStorage')) {
+  //   // Yippee! We can use localStorage awesomeness
+  // } else {
+  //   // Too bad, no localStorage for us
+  //   console.error('Too bad, no localStorage for us');
+  // }
 
   /**
    * Game events
    */
-  GAME_BOARD.addEventListener('click', startTimer);
+  SPLASH_SCREEN.addEventListener('click', splashScreen);
   GAME_BOARD.addEventListener('click', startGame);
   RESTART.addEventListener('click', resetGame);
   PLAY_AGAIN.addEventListener('click', playAgain);
 
+
+  /**
+   * Poly localstorage
+   */
+
+  function storageAvailable(type) {
+    try {
+      var storage = window[type],
+        x = '__storage_test__';
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+    } catch (e) {
+      return e instanceof DOMException && (
+          // everything except Firefox
+          e.code === 22 ||
+          // Firefox
+          e.code === 1014 ||
+          // test name field too, because code might not be present
+          // everything except Firefox
+          e.name === 'QuotaExceededError' ||
+          // Firefox
+          e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+        // acknowledge QuotaExceededError only if there's something already stored
+        storage.length !== 0;
+    }
+  }
 }());

@@ -1,46 +1,47 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <title>Matching Game</title>
-        <meta name="description" content="Matching memory game web app.">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-        <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
-        <link rel="stylesheet" href="css/animate.min.css">
-        <link rel="stylesheet" href="css/app.css">
-    </head>
+<head>
+    <meta charset="utf-8">
+    <title>Matching Game</title>
+    <meta name="description" content="Matching memory game web app.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
 
-    <body>
+<body>
 
-        <div class="container">
-            <header>
-                <h1>Matching Game</h1>
-            </header>
+    <header class="score-panel">
+        <h1>Matching Memory Game</h1>
+        <div class="clock">
+            <i class="fa fa-clock-o"></i>
+            <span class="time">00:00</span>s
+        </div>
+        <ul class="stars">
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+        </ul>
+        <div class="counter">
+            <span class="moves">0</span> Moves
+        </div>
+        <div class="restart btn" id="restart">
+            <i class="fa fa-repeat"></i><span> Restart</span>
+        </div>
+        <a href="#leaderboard" class="btn btn--score">Leaderboard</a>
 
-            <section class="score-panel">
-                <div class="clock">
-                    <i class="fa fa-clock-o"></i>
-                    <span class="time">00:00</span>s
-                </div>
-                <ul class="stars">
-                    <li>
-                        <i class="fa fa-star"></i>
-                    </li>
-                    <li>
-                        <i class="fa fa-star"></i>
-                    </li>
-                    <li>
-                        <i class="fa fa-star"></i>
-                    </li>
-                </ul>
-                <span class="moves">0</span> Moves
-                <div class="restart" id="restart">
-                    <i class="fa fa-repeat"></i><span> Restart</span>
-                </div>
-            </section>
-
+    </header>
+    <div class="container animated fadeIn">
+        <div class="board-container">
             <ul class="deck" id="gameBoard">
                 <li class="card">
                     <i class="fa fa-diamond"></i>
@@ -91,27 +92,64 @@
                     <i class="fa fa-cube"></i>
                 </li>
             </ul>
-
-            <footer class="footer">
-                <p>Made with ❤️ by <a href="http://giovannilara.com">Giovanni De Andre</a> | 2018 All Rights Reserved.</p>
-            </footer>
-
-            <div class="modal flex__align-center modal--hidden">
-                <div class="modal__content flex__align-center">
-                    <div class="modal__content__inner">
-                        <div class="success">
-                            <i class="fa fa-check-circle fa-4x" style="color: lightgreen"></i>
-                        </div>
-                        <h2>Congratulations! You Won!</h2>
-                        <p class="stats">With <span id="movesScore">0</span> Moves in <span id="recordTime">0</span>s and <span id="starsScore">0</span> Stars <br>Woooooo!</p>
-                        <button id="playAgain">Play again!</button>
-                    </div>
-                </div>
+            <div id="start-screen">
+                <p>Click to <br> <strong>START GAME</strong></p>
+                <i class="fa fa-play-circle"></i>
             </div>
-
         </div>
 
-        <script src="js/app.js"></script>
-    </body>
+        <div id="leaderboard">
+            <h2>Oops! Game Leaderboard is Not Available Yet!</h2>
+            <a class="btn btn--close" href="#">close</a>
+            <!-- <table class="leaders">
+                <thead>
+                    <tr>
+                        <td>RANK</td>
+                        <td>SCORE</td>
+                        <td>TIME</td>
+                        <td>NAME</td>
+                    </tr>
+                </thead>
+                <tbody class="tbody">
+                    <tr>
+                        <td>1</td>
+                        <td>4566</td>
+                        <td>1'23</td>
+                        <td>GIO</td>
+                    </tr>
+                </tbody>
+            </table> -->
+        </div>
+    </div>
+    <div class="modal flex__align-center modal--hidden">
+            <div class="modal__content flex__align-center">
+                <div class="modal__content__inner">
+                    <div class="success">
+                        <i class="fa fa-check-circle fa-4x" style="color: teal"></i>
+                    </div>
+                    <h2>Congratulations! You Won!</h2>
+                    <p class="stats">With <span id="movesScore">0</span> Moves in <span id="recordTime">0</span>s
+                    </p>
+                    <div id="starsScore">
+
+                    </div>
+                    <h3 id="greet-player"></h3>
+                    <form class="form form--hidden" id="form">
+                        <label for="playerName">
+                            <input type="text" name="playerName" id="playerName" maxlength="3" minlength="3" value=""
+                                placeholder="Enter Player Name Initials" required>
+                            <button class="btn" id="saveScore">Save Score</button>
+                        </label>
+                    </form>
+                    <button class="btn" id="playAgain">Play again!</button>
+                </div>
+            </div>
+        </div>
+    <footer class="footer">
+        <p>Made with ❤️ by <a href="http://giovannilara.com">Giovanni De Andre</a> | 2018 All Rights Reserved.</p>
+    </footer>
+
+    <script async src="js/app.js"></script>
+</body>
 
 </html>
